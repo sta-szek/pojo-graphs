@@ -14,6 +14,24 @@ public class MatrixTest {
     public final SystemOutRule systemOutRule = new SystemOutRule().enableLog()
                                                                   .muteForSuccessfulTests();
 
+
+    @Test
+    public void shouldPrintFormattedSquareMatrixAfterValuesSet() {
+        // given
+        final Matrix matrix = new Matrix(2);
+        final String expectedOutput = "|\t1\t2\t|\n" +
+                                      "|\t3\t4\t|";
+        matrix.setValue(1,1,1);
+        matrix.setValue(2,1,2);
+        matrix.setValue(3,2,1);
+        matrix.setValue(4,2,2);
+        // when
+        matrix.print();
+
+        // then
+        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+    }
+
     @Test
     public void shouldPrintFormattedSquareMatrix() {
         // given
@@ -66,6 +84,44 @@ public class MatrixTest {
 
         // then
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void shouldAddTwoMatrix() {
+        // given
+        final Matrix matrix1 = createAndFillWith(1, 2, 3);
+        final Matrix matrix2 = createAndFillWith(2, 2, 3);
+        final Matrix expectedResult = createAndFillWith(3, 2, 3);
+
+        // when
+        final Matrix result = matrix1.add(matrix2);
+
+        // then
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
+    public void shouldSubTwoMatrix() {
+        // given
+        final Matrix matrix1 = createAndFillWith(1, 2, 3);
+        final Matrix matrix2 = createAndFillWith(2, 2, 3);
+        final Matrix expectedResult = createAndFillWith(-1, 2, 3);
+
+        // when
+        final Matrix result = matrix1.sub(matrix2);
+
+        // then
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    private Matrix createAndFillWith(final long value, final int n, final int m) {
+        final Matrix matrix = new Matrix(n, m);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                matrix.setValue(value, i, j);
+            }
+        }
+        return matrix;
     }
 
     private long getInternalStateOfMatrix(final Matrix matrix, final int n, final int m) {
