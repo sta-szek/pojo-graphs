@@ -10,26 +10,22 @@ import static org.powermock.reflect.Whitebox.getInternalState;
 
 public class MatrixTest {
 
-    @Rule
-    public final SystemOutRule systemOutRule = new SystemOutRule().enableLog()
-                                                                  .muteForSuccessfulTests();
-
-
     @Test
     public void shouldPrintFormattedSquareMatrixAfterValuesSet() {
         // given
         final Matrix matrix = new Matrix(2);
         final String expectedOutput = "|\t1\t2\t|\n" +
                                       "|\t3\t4\t|";
-        matrix.setValue(1,1,1);
-        matrix.setValue(2,1,2);
-        matrix.setValue(3,2,1);
-        matrix.setValue(4,2,2);
+        matrix.setValue(1, 1, 1);
+        matrix.setValue(2, 1, 2);
+        matrix.setValue(3, 2, 1);
+        matrix.setValue(4, 2, 2);
+
         // when
-        matrix.print();
+        final String result = matrix.toString();
 
         // then
-        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+        assertThat(result).isEqualTo(expectedOutput);
     }
 
     @Test
@@ -39,10 +35,10 @@ public class MatrixTest {
         final String expectedOutput = "|\t0\t0\t|\n" +
                                       "|\t0\t0\t|";
         // when
-        matrix.print();
+        final String result = matrix.toString();
 
         // then
-        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+        assertThat(result).isEqualTo(expectedOutput);
     }
 
     @Test
@@ -52,10 +48,10 @@ public class MatrixTest {
         final String expectedOutput = "|\t0\t0\t0\t|\n" +
                                       "|\t0\t0\t0\t|";
         // when
-        matrix.print();
+        final String result = matrix.toString();
 
         // then
-        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+        assertThat(result).isEqualTo(expectedOutput);
     }
 
     @Test
@@ -101,7 +97,21 @@ public class MatrixTest {
     }
 
     @Test
-    public void shouldSubTwoMatrix() {
+    public void shouldMultiplyByNumber() {
+        // given
+        final Matrix matrix = createAndFillWith(2, 2, 3);
+        final long multiplyNumber = 4L;
+        final Matrix expectedMatrix = createAndFillWith(2 * multiplyNumber, 2, 3);
+
+        // when
+        final Matrix result = matrix.multiply(multiplyNumber);
+
+        // then
+        assertThat(result).isEqualTo(expectedMatrix);
+    }
+
+    @Test
+    public void shouldSubtractTwoMatrix() {
         // given
         final Matrix matrix1 = createAndFillWith(1, 2, 3);
         final Matrix matrix2 = createAndFillWith(2, 2, 3);

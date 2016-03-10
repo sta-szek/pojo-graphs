@@ -64,7 +64,19 @@ public class Matrix {
         return sumOfMatrix;
     }
 
-    public void print() {
+    public Matrix multiply(final long multiplyNumber) {
+        final Matrix multipliedMatrix = new Matrix(n, m);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                final long newValue = getValue(i, j) * multiplyNumber;
+                multipliedMatrix.setValue(newValue, i, j);
+            }
+        }
+        return multipliedMatrix;
+    }
+
+    @Override
+    public String toString() {
         final StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < n; i++) {
             stringBuilder.append("|\t");
@@ -77,7 +89,7 @@ public class Matrix {
                 stringBuilder.append("\n");
             }
         }
-        System.out.print(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
     public int getRows() {
