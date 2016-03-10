@@ -1,8 +1,6 @@
 package org.pojo.graphs.matrix;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.pojo.test.TestHelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,10 +8,22 @@ import static org.powermock.reflect.Whitebox.getInternalState;
 
 public class MatrixTest {
 
-    @Rule
-    public final SystemOutRule systemOutRule = new SystemOutRule().enableLog()
-                                                                  .muteForSuccessfulTests();
+    @Test
+    public void shouldCreateMatrixFormTwoDimensionalArray() {
+        // given
+        final long[][] matrix = {{5, 1}, {4, 2}};
+        final Matrix expectedResult = new Matrix(2, 2);
+        expectedResult.setValue(5, 0, 0);
+        expectedResult.setValue(1, 0, 1);
+        expectedResult.setValue(4, 1, 0);
+        expectedResult.setValue(2, 1, 1);
 
+        // when
+        final Matrix result = new Matrix(matrix);
+
+        // then
+        assertThat(result).isEqualTo(expectedResult);
+    }
 
     @Test
     public void shouldPrintFormattedSquareMatrixAfterValuesSet() {
@@ -21,15 +31,16 @@ public class MatrixTest {
         final Matrix matrix = new Matrix(2);
         final String expectedOutput = "|\t1\t2\t|\n" +
                                       "|\t3\t4\t|";
-        matrix.setValue(1,1,1);
-        matrix.setValue(2,1,2);
-        matrix.setValue(3,2,1);
-        matrix.setValue(4,2,2);
+        matrix.setValue(1, 0, 0);
+        matrix.setValue(2, 0, 1);
+        matrix.setValue(3, 1, 0);
+        matrix.setValue(4, 1, 1);
+
         // when
-        matrix.print();
+        final String result = matrix.toString();
 
         // then
-        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+        assertThat(result).isEqualTo(expectedOutput);
     }
 
     @Test
@@ -39,10 +50,10 @@ public class MatrixTest {
         final String expectedOutput = "|\t0\t0\t|\n" +
                                       "|\t0\t0\t|";
         // when
-        matrix.print();
+        final String result = matrix.toString();
 
         // then
-        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+        assertThat(result).isEqualTo(expectedOutput);
     }
 
     @Test
@@ -52,10 +63,10 @@ public class MatrixTest {
         final String expectedOutput = "|\t0\t0\t0\t|\n" +
                                       "|\t0\t0\t0\t|";
         // when
-        matrix.print();
+        final String result = matrix.toString();
 
         // then
-        assertThat(systemOutRule.getLog()).isEqualTo(expectedOutput);
+        assertThat(result).isEqualTo(expectedOutput);
     }
 
     @Test
@@ -65,8 +76,8 @@ public class MatrixTest {
         final long expectedResult = 1L;
 
         // when
-        matrix.setValue(expectedResult, 2, 2);
-        final long result = getInternalStateOfMatrix(matrix, 2, 2);
+        matrix.setValue(expectedResult, 1, 1);
+        final long result = getInternalStateOfMatrix(matrix, 1, 1);
 
         // then
         assertThat(result).isEqualTo(expectedResult);
@@ -77,10 +88,10 @@ public class MatrixTest {
         // given
         final Matrix matrix = new Matrix(2, 2);
         final long expectedResult = 1L;
-        setInternalStateOfMatrix(matrix, expectedResult, 2, 2);
+        setInternalStateOfMatrix(matrix, expectedResult, 1, 1);
 
         // when
-        final long result = matrix.getValue(2, 2);
+        final long result = matrix.getValue(1, 1);
 
         // then
         assertThat(result).isEqualTo(expectedResult);
@@ -101,7 +112,60 @@ public class MatrixTest {
     }
 
     @Test
-    public void shouldSubTwoMatrix() {
+    public void shouldMultiplyByNumber() {
+        // given
+        final Matrix matrix = createAndFillWith(2, 2, 3);
+        final long multiplyNumber = 4L;
+        final Matrix expectedMatrix = createAndFillWith(2 * multiplyNumber, 2, 3);
+
+        // when
+        final Matrix result = matrix.multiply(multiplyNumber);
+
+        // then
+        assertThat(result).isEqualTo(expectedMatrix);
+    }
+
+    @Test
+    public void shouldMultiplyByOtherMatrix1() {
+        // given
+        final long[][] matrix1Array = {{2, 1, 3}, {-1, 2, 4}};
+        final Matrix matrix1 = new Matrix(matrix1Array);
+        final long[][] matrix2Array = {{1, 3}, {2, -2}, {-1, 4}};
+        final Matrix matrix2 = new Matrix(matrix2Array);
+        final long[][] expectedMatrixArray = {{1, 16}, {-1, 9}};
+        final Matrix expectedMatrix = new Matrix(expectedMatrixArray);
+
+        // when
+        final Matrix result = matrix1.multiply(matrix2);
+
+        // then
+        assertThat(result).isEqualTo(expectedMatrix);
+    }
+
+    @Test
+    public void shouldMultiplyByOtherMatrix2() {
+        // given
+        final long[][] matrix1Array = {{5, 1}, {-3, 3}, {4, -1}, {-1, 2}, {-0, 7}};
+        final Matrix matrix1 = new Matrix(matrix1Array);
+        final long[][] matrix2Array = {{1, 7, 0, -1, 9, 0, 5}, {2, -6, -1, 10, 2, -3, 1}};
+        final Matrix matrix2 = new Matrix(matrix2Array);
+        final long[][] expectedMatrixArray = {{7, 29, -1, 5, 47, -3, 26},
+                                              {3, -39, -3, 33, -21, -9, -12},
+                                              {2, 34, 1, -14, 34, 3, 19},
+                                              {3, -19, -2, 21, -5, -6, -3},
+                                              {14, -42, -7, 70, 14, -21, 7}};
+        final Matrix expectedMatrix = new Matrix(expectedMatrixArray);
+
+        // when
+        final Matrix result = matrix1.multiply(matrix2);
+
+        // then
+        assertThat(result).isEqualTo(expectedMatrix);
+    }
+
+
+    @Test
+    public void shouldSubtractTwoMatrix() {
         // given
         final Matrix matrix1 = createAndFillWith(1, 2, 3);
         final Matrix matrix2 = createAndFillWith(2, 2, 3);
@@ -126,12 +190,12 @@ public class MatrixTest {
 
     private long getInternalStateOfMatrix(final Matrix matrix, final int n, final int m) {
         final long[][] targetMatrix = getInternalState(matrix, "matrix");
-        return targetMatrix[n - 1][m - 1];
+        return targetMatrix[n][m];
     }
 
     private void setInternalStateOfMatrix(final Matrix matrix, final long value, final int n, final int m) throws Exception {
         final long[][] targetMatrix = getInternalState(matrix, "matrix");
-        targetMatrix[n - 1][m - 1] = value;
+        targetMatrix[n][m] = value;
         TestHelper.setFinalStatic(matrix, "matrix", targetMatrix);
     }
 
