@@ -1,6 +1,9 @@
 package org.pojo.graphs;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Edge {
     private final long from;
     private final long to;
@@ -33,5 +36,31 @@ public class Edge {
     @Override
     public String toString() {
         return from + edgeType.toString() + to;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Edge edge = (Edge) o;
+
+        return new EqualsBuilder().append(from, edge.from)
+                                  .append(to, edge.to)
+                                  .append(edgeType, edge.edgeType)
+                                  .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(from)
+                                    .append(to)
+                                    .append(edgeType)
+                                    .toHashCode();
     }
 }
