@@ -4,7 +4,6 @@ package org.pojo.graphs;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,32 +17,36 @@ public class Graph {
     private static final String REGEX = "(?<" + FROM + ">\\d)(?<" + DIRECTION + ">(<\\-)|(\\->)|(<\\->)|( ))(?<" + TO + ">\\d)";
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
-    private List<Edge> edges = new ArrayList<>();
+    private final Edges edges;
 
-    public Graph(final List<Edge> edges) {
+    public Graph(final Edges edges) {
         this.edges = edges;
     }
 
+    public Graph(final List<Edge> edges) {
+        this.edges = new Edges(edges);
+    }
+
     public Graph(final Path path) throws IOException {
-        Files.lines(path)
-             .forEach(this::convertAndAddToEdges);
+        final List<Edge> edges = Files.lines(path)
+                                      .map(this::toEdge)
+                                      .collect(Collectors.toList());
+        this.edges = new Edges(edges);
     }
 
     @Override
     public String toString() {
-        return edges.stream()
-                    .map(Edge::toString)
-                    .collect(Collectors.joining("\n"));
+        return edges.toString();
     }
 
-    private void convertAndAddToEdges(final String line) {
+    private Edge toEdge(final String line) {
         final Matcher matcher = PATTERN.matcher(line);
         if (matcher.matches()) {
             final long from = Long.parseLong(matcher.group(FROM));
             final EdgeType edgeType = EdgeType.getByDirection(matcher.group(DIRECTION));
             final long to = Long.parseLong(matcher.group(TO));
-            final Edge edge = new Edge(from, to, edgeType);
-            edges.add(edge);
+            return new Edge(from, to, edgeType);
+
         } else {
             throw new InvalidGraphFileException("Plik zawiera nieprawidłowe wpisy");
         }

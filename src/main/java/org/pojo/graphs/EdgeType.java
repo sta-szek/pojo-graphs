@@ -22,6 +22,10 @@ public enum EdgeType {
         return first.orElse(UNDIRECTED);
     }
 
+    public boolean isUndirected() {
+        return this.equals(UNDIRECTED);
+    }
+
     @Override
     public String toString() {
         return direction;
