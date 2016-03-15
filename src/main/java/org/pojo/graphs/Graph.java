@@ -1,6 +1,9 @@
 package org.pojo.graphs;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,6 +40,28 @@ public class Graph {
     @Override
     public String toString() {
         return edges.toString();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Graph graph = (Graph) o;
+
+        return new EqualsBuilder().append(edges, graph.edges)
+                                  .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(edges)
+                                    .toHashCode();
     }
 
     private Edge toEdge(final String line) {

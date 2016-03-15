@@ -8,10 +8,62 @@ import org.pojo.helpers.Matrices;
 import org.pojo.helpers.TestHelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.powermock.reflect.Whitebox.getInternalState;
 
 @RunWith(JUnitParamsRunner.class)
 public class MatrixTest {
+
+    @Test
+    public void shouldThrowException_WhenMultiplyConditionFails() {
+        // given
+        final Matrix matrix1 = new Matrix(1, 2);
+        final Matrix matrix2 = new Matrix(3, 4);
+
+        // when
+        final Throwable result = catchThrowable(() -> matrix1.multiply(matrix2));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidOperationException.class);
+    }
+
+    @Test
+    @Parameters(method = "getMatricesForAddOrSubConditionFail")
+    public void shouldThrowException_WhenAddOrSubConditionFails(final Matrix matrix1, final Matrix matrix2) {
+        // given
+
+        // when
+        final Throwable result = catchThrowable(() -> matrix1.add(matrix2));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidOperationException.class);
+    }
+
+    @Test
+    @Parameters(method = "getOutOfRangeMatrixValues")
+    public void shouldThrowException_WhenSettingValueOutOfRange(final int row, final int column) {
+        // given
+        final Matrix matrix = new Matrix(1, 1);
+
+        // when
+        final Throwable result = catchThrowable(() -> matrix.setValue(1L, row, column));
+
+        // then
+        assertThat(result).isInstanceOf(UnsupportedOperationException.class);
+    }
+
+    @Test
+    @Parameters(method = "getOutOfRangeMatrixValues")
+    public void shouldThrowException_WhenGettingValueOutOfRange(final int row, final int column) {
+        // given
+        final Matrix matrix = new Matrix(1, 1);
+
+        // when
+        final Throwable result = catchThrowable(() -> matrix.getValue(row, column));
+
+        // then
+        assertThat(result).isInstanceOf(UnsupportedOperationException.class);
+    }
 
     @Test
     public void shouldCreateMatrixFormTwoDimensionalArray() {
@@ -131,6 +183,34 @@ public class MatrixTest {
     }
 
     @Test
+    public void shouldReturnSameHashCodes() {
+        // given
+        final Matrix matrix1 = new Matrix(5);
+        final Matrix matrix2 = new Matrix(5);
+
+        // when
+        final int result1 = matrix1.hashCode();
+        final int result2 = matrix2.hashCode();
+
+        // then
+        assertThat(result1).isEqualTo(result2);
+    }
+
+    @Test
+    public void shouldSubtractTwoMatrix() {
+        // given
+        final Matrix matrix1 = createAndFillWith(1, 2, 3);
+        final Matrix matrix2 = createAndFillWith(2, 2, 3);
+        final Matrix expectedResult = createAndFillWith(-1, 2, 3);
+
+        // when
+        final Matrix result = matrix1.sub(matrix2);
+
+        // then
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
+    @Test
     @Parameters(method = "getMatricesForMultiplications")
     public void shouldMultiplyByOtherMatrix(final long[][] matrixArray1, final long[][] matrixArray2, final long[][] expectedMatrixArray) {
         // given
@@ -146,17 +226,50 @@ public class MatrixTest {
     }
 
     @Test
-    public void shouldSubtractTwoMatrix() {
+    @Parameters(method = "getObjectForEqual")
+    public void shouldEqual(final Matrix matrix1, final Matrix matrix2) {
         // given
-        final Matrix matrix1 = createAndFillWith(1, 2, 3);
-        final Matrix matrix2 = createAndFillWith(2, 2, 3);
-        final Matrix expectedResult = createAndFillWith(-1, 2, 3);
 
         // when
-        final Matrix result = matrix1.sub(matrix2);
+        final boolean result = matrix1.equals(matrix2);
 
         // then
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @Parameters(method = "getObjectForUnequal")
+    public void shouldNotEqual(final Matrix matrix1, final Matrix matrix2) {
+        // given
+
+        // when
+        final boolean result = matrix1.equals(matrix2);
+
+        // then
+        assertThat(result).isFalse();
+    }
+
+    private Object getMatricesForAddOrSubConditionFail() {
+        return new Object[][]{{new Matrix(1, 2), new Matrix(1, 3)},
+                              {new Matrix(1, 2), new Matrix(2, 2)}};
+    }
+
+    private Object getOutOfRangeMatrixValues() {
+        return new Object[][]{{10, 30},
+                              {-10, 30},
+                              {0, -30},
+                              {0, 1}};
+    }
+
+    private Object getObjectForEqual() {
+        final Matrix matrix = new Matrix(5);
+        return new Object[][]{{new Matrix(4), new Matrix(4)},
+                              {matrix, matrix}};
+    }
+
+    private Object getObjectForUnequal() {
+        return new Object[][]{{new Matrix(1, 2), null},
+                              {new Matrix(5, 5), new Matrix(5, 4)}};
     }
 
     private Object getMatricesForMultiplications() {

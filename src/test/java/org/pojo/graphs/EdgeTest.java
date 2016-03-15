@@ -22,6 +22,20 @@ public class EdgeTest {
     }
 
     @Test
+    public void shouldReturnSameHashCodes(){
+        // given
+        Edge edge1 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+        Edge edge2 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+
+        // when
+        int result1 = edge1.hashCode();
+        int result2 = edge2.hashCode();
+
+        // then
+        assertThat(result1).isEqualTo(result2);
+    }
+
+    @Test
     @Parameters(method = "getObjectsToTest")
     public void shouldHaveValidDirection(final Edge edge, final String expectedString) {
         // given
@@ -33,10 +47,46 @@ public class EdgeTest {
         assertThat(result).isEqualTo(expectedString);
     }
 
+    @Test
+    @Parameters(method = "getObjectForEqual")
+    public void shouldEqual(final Edge edge1, final Edge edge2) {
+        // given
+
+        // when
+        final boolean result = edge1.equals(edge2);
+
+        // then
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    @Parameters(method = "getObjectForUnequal")
+    public void shouldNotEqual(final Edge edge1, final Edge edge2) {
+        // given
+
+        // when
+        final boolean result = edge1.equals(edge2);
+
+        // then
+        assertThat(result).isFalse();
+    }
 
     private Object getObjectsToTest() {
         return new Object[][]{{new Edge(1, 2, EdgeType.LEFT_DIRECTED), "1<-2"},
                               {new Edge(1, 2, EdgeType.UNDIRECTED), "1<->2"},
                               {new Edge(1, 2, EdgeType.RIGHT_DIRECTED), "1->2"}};
     }
+
+    private Object getObjectForEqual() {
+        final Edge edge = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+        return new Object[][]{{new Edge(1, 2, EdgeType.LEFT_DIRECTED), new Edge(1, 2, EdgeType.LEFT_DIRECTED)},
+                              {edge, edge}};
+    }
+
+    private Object getObjectForUnequal() {
+        return new Object[][]{{new Edge(1, 2, EdgeType.LEFT_DIRECTED), null},
+                              {new Edge(1, 2, EdgeType.LEFT_DIRECTED), new Edge(2, 1, EdgeType.LEFT_DIRECTED)}};
+    }
+
+
 }

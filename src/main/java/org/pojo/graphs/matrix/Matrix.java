@@ -27,14 +27,14 @@ public class Matrix {
     }
 
     public void setValue(final long value, final int row, final int column) {
-        if (row > this.rows || column > this.columns) {
+        if (isOutOfRange(row, column)) {
             throw new UnsupportedOperationException("Nie można ustawić wartości dla pola spoza zakresu macierzy!");
         }
         matrix[row][column] = value;
     }
 
     public long getValue(final int row, final int column) {
-        if (row > this.rows || column > this.columns) {
+        if (isOutOfRange(row, column)) {
             throw new UnsupportedOperationException("Nie można odczytać wartości dla pola spoza zakresu macierzy!");
         }
         return matrix[row][column];
@@ -139,6 +139,10 @@ public class Matrix {
                                     .append(columns)
                                     .append(matrix)
                                     .toHashCode();
+    }
+
+    private boolean isOutOfRange(final int row, final int column) {
+        return row >= this.rows || row < 0 || column >= this.columns || column < 0;
     }
 
     private void checkMultiplyPreconditions(final Matrix matrix) {
