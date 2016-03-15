@@ -43,8 +43,8 @@ check.dependsOn jacocoTestReport
 
 pitest {
     pitestVersion = '1.1.9'
-    failWhenNoMutations = false
-    targetClasses = ['org.pojo.grahs.*']
+    excludedMethods = ['equals', 'hashCode']
+    targetClasses = ['org.pojo.graphs.*']
     threads = 4
     outputFormats = ['HTML']
 }

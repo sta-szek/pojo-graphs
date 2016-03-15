@@ -255,8 +255,8 @@ public class MatrixTest {
     }
 
     private Object getOutOfRangeMatrixValues() {
-        return new Object[][]{{10, 30},
-                              {-10, 30},
+        return new Object[][]{{1, 1},
+                              {-10, 1},
                               {0, -30},
                               {0, 1}};
     }

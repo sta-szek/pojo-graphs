@@ -85,6 +85,7 @@ public class EdgesTest {
                               {"1<-2", new Edges(new Edge(2, 1, EdgeType.RIGHT_DIRECTED))},
                               {"1->2", new Edges(new Edge(2, 1, EdgeType.LEFT_DIRECTED))},
                               {"1<->2", new Edges(new Edge(2, 1, EdgeType.UNDIRECTED))},
+                              {"1<->1", new Edges(new Edge(1, 1, EdgeType.UNDIRECTED))},
 
                               {"1<->2", new Edges(new Edge(1, 2, EdgeType.UNDIRECTED),
                                                   new Edge(2, 1, EdgeType.LEFT_DIRECTED),
