@@ -3,4 +3,4 @@
 .idea
 pojo-graph.iml
 .gradle
-build
+build/
