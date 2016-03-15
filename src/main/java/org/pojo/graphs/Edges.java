@@ -2,6 +2,7 @@ package org.pojo.graphs;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,6 +13,11 @@ public class Edges {
 
     public Edges(final List<Edge> edges) {
         edges.forEach(this::add);
+    }
+
+    public Edges(final Edge... edges) {
+        Arrays.stream(edges)
+              .forEach(this::add);
     }
 
     public void add(final Edge edge) {

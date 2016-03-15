@@ -1,11 +1,16 @@
 package org.pojo.graphs.matrix;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
-import org.pojo.test.TestHelper;
+import org.junit.runner.RunWith;
+import org.pojo.helpers.Matrices;
+import org.pojo.helpers.TestHelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.powermock.reflect.Whitebox.getInternalState;
 
+@RunWith(JUnitParamsRunner.class)
 public class MatrixTest {
 
     @Test
@@ -126,13 +131,11 @@ public class MatrixTest {
     }
 
     @Test
-    public void shouldMultiplyByOtherMatrix1() {
+    @Parameters(method = "getMatricesForMultiplications")
+    public void shouldMultiplyByOtherMatrix(final long[][] matrixArray1, final long[][] matrixArray2, final long[][] expectedMatrixArray) {
         // given
-        final long[][] matrix1Array = {{2, 1, 3}, {-1, 2, 4}};
-        final Matrix matrix1 = new Matrix(matrix1Array);
-        final long[][] matrix2Array = {{1, 3}, {2, -2}, {-1, 4}};
-        final Matrix matrix2 = new Matrix(matrix2Array);
-        final long[][] expectedMatrixArray = {{1, 16}, {-1, 9}};
+        final Matrix matrix1 = new Matrix(matrixArray1);
+        final Matrix matrix2 = new Matrix(matrixArray2);
         final Matrix expectedMatrix = new Matrix(expectedMatrixArray);
 
         // when
@@ -141,28 +144,6 @@ public class MatrixTest {
         // then
         assertThat(result).isEqualTo(expectedMatrix);
     }
-
-    @Test
-    public void shouldMultiplyByOtherMatrix2() {
-        // given
-        final long[][] matrix1Array = {{5, 1}, {-3, 3}, {4, -1}, {-1, 2}, {-0, 7}};
-        final Matrix matrix1 = new Matrix(matrix1Array);
-        final long[][] matrix2Array = {{1, 7, 0, -1, 9, 0, 5}, {2, -6, -1, 10, 2, -3, 1}};
-        final Matrix matrix2 = new Matrix(matrix2Array);
-        final long[][] expectedMatrixArray = {{7, 29, -1, 5, 47, -3, 26},
-                                              {3, -39, -3, 33, -21, -9, -12},
-                                              {2, 34, 1, -14, 34, 3, 19},
-                                              {3, -19, -2, 21, -5, -6, -3},
-                                              {14, -42, -7, 70, 14, -21, 7}};
-        final Matrix expectedMatrix = new Matrix(expectedMatrixArray);
-
-        // when
-        final Matrix result = matrix1.multiply(matrix2);
-
-        // then
-        assertThat(result).isEqualTo(expectedMatrix);
-    }
-
 
     @Test
     public void shouldSubtractTwoMatrix() {
@@ -176,6 +157,11 @@ public class MatrixTest {
 
         // then
         assertThat(result).isEqualTo(expectedResult);
+    }
+
+    private Object getMatricesForMultiplications() {
+        return new Object[][]{{Matrices.MATRIX_1A, Matrices.MATRIX_1B, Matrices.MATRIX_1A_X_MATRIX_1B},
+                              {Matrices.MATRIX_2A, Matrices.MATRIX_2B, Matrices.MATRIX_2A_X_MATRIX_2B}};
     }
 
     private Matrix createAndFillWith(final long value, final int n, final int m) {
