@@ -1,10 +1,13 @@
 package org.pojo.graphs;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@RunWith(JUnitParamsRunner.class)
 public class EdgeTest {
 
     @Test
@@ -19,38 +22,21 @@ public class EdgeTest {
     }
 
     @Test
-    public void shouldReturnToString1() {
+    @Parameters(method = "getObjectsToTest")
+    public void shouldHaveValidDirection(final Edge edge, final String expectedString) {
         // given
-        final Edge edge = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
 
         // when
         final String result = edge.toString();
 
         // then
-        assertThat(result).isEqualTo("1<-2");
+        assertThat(result).isEqualTo(expectedString);
     }
 
-    @Test
-    public void shouldReturnToString2() {
-        // given
-        final Edge edge = new Edge(1, 2, EdgeType.RIGHT_DIRECTED);
 
-        // when
-        final String result = edge.toString();
-
-        // then
-        assertThat(result).isEqualTo("1->2");
-    }
-
-    @Test
-    public void shouldReturnToString3() {
-        // given
-        final Edge edge = new Edge(1, 2, EdgeType.UNDIRECTED);
-
-        // when
-        final String result = edge.toString();
-
-        // then
-        assertThat(result).isEqualTo("1<->2");
+    private Object getObjectsToTest() {
+        return new Object[][]{{new Edge(1, 2, EdgeType.LEFT_DIRECTED), "1<-2"},
+                              {new Edge(1, 2, EdgeType.UNDIRECTED), "1<->2"},
+                              {new Edge(1, 2, EdgeType.RIGHT_DIRECTED), "1->2"}};
     }
 }
