@@ -2,7 +2,6 @@ package org.pojo.graphs;
 
 
 import java.util.Arrays;
-import java.util.Optional;
 
 public enum EdgeType {
     LEFT_DIRECTED("<-"),
@@ -16,10 +15,11 @@ public enum EdgeType {
     }
 
     public static EdgeType getByDirection(final String direction) {
-        final Optional<EdgeType> first = Arrays.stream(EdgeType.values())
-                                               .filter(edgeType -> edgeType.direction.equals(direction))
-                                               .findFirst();
-        return first.orElse(UNDIRECTED);
+        return Arrays.stream(EdgeType.values())
+                     .filter(edgeType -> edgeType.direction.equals(direction))
+                     .findFirst()
+                     .orElse(UNDIRECTED);
+
     }
 
     public boolean isUndirected() {
