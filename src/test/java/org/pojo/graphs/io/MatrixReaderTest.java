@@ -39,7 +39,7 @@ public class MatrixReaderTest {
     public void shouldThrowException_IfFileIsEmpty() throws URISyntaxException, IOException {
         // given
         final URI uri = this.getClass()
-                            .getResource("/EmptyFile.txt")
+                            .getResource("/emptyFile.txt")
                             .toURI();
         final Path path = new File(uri).toPath();
         final MatrixReader matrixReader = new MatrixReader();
