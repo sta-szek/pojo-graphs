@@ -3,6 +3,7 @@ package org.pojo.graphs;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.pojo.graphs.matrix.Matrix;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -64,12 +65,33 @@ public class Graph {
                                     .toHashCode();
     }
 
+    public Matrix calculateAdjacencyMatrix() {
+        final int numberOfEdges = edges.getNumberOfEdges();
+        final Matrix adjacencyMatrix = new Matrix(numberOfEdges);
+        edges.stream()
+             .forEach(edge -> {
+                 switch (edge.getEdgeType()) {
+                     case LEFT_DIRECTED:
+                         adjacencyMatrix.setValue(1, edge.getFrom() - 1, edge.getTo() - 1);
+                         break;
+                     case RIGHT_DIRECTED:
+                         adjacencyMatrix.setValue(1, edge.getTo() - 1, edge.getFrom() - 1);
+                         break;
+                     case UNDIRECTED:
+                         adjacencyMatrix.setValue(1, edge.getFrom() - 1, edge.getTo() - 1);
+                         adjacencyMatrix.setValue(1, edge.getTo() - 1, edge.getFrom() - 1);
+                         break;
+                 }
+             });
+        return adjacencyMatrix;
+    }
+
     private Edge toEdge(final String line) {
         final Matcher matcher = PATTERN.matcher(line);
         if (matcher.matches()) {
-            final long from = Long.parseLong(matcher.group(FROM));
+            final int from = Integer.parseInt(matcher.group(FROM));
             final EdgeType edgeType = EdgeType.getByDirection(matcher.group(DIRECTION));
-            final long to = Long.parseLong(matcher.group(TO));
+            final int to = Integer.parseInt(matcher.group(TO));
             return new Edge(from, to, edgeType);
 
         } else {

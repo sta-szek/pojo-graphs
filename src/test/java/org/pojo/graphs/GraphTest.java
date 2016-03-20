@@ -4,12 +4,14 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pojo.graphs.matrix.Matrix;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -51,17 +53,36 @@ public class GraphTest {
     }
 
     @Test
-    public void shouldReturnSameHashCodes(){
+    public void shouldReturnSameHashCodes() {
         // given
-        Graph graph1 = new Graph(new Edges());
-        Graph graph2 = new Graph(new Edges());
+        final Graph graph1 = new Graph(new Edges());
+        final Graph graph2 = new Graph(new Edges());
 
         // when
-        int result1 = graph1.hashCode();
-        int result2 = graph2.hashCode();
+        final int result1 = graph1.hashCode();
+        final int result2 = graph2.hashCode();
 
         // then
         assertThat(result1).isEqualTo(result2);
+    }
+
+    @Test
+    public void shouldCalculateAdjacencyMatrix() throws URISyntaxException, IOException {
+        // given
+        final URI uri = this.getClass()
+                            .getResource("/graphs/UndirectedGraph.txt")
+                            .toURI();
+        final Graph graph = new Graph(Paths.get(uri));
+        final Matrix expectedAdjacencyMatrix = new Matrix(new int[][]{{0, 1, 1, 0, 1},
+                                                                      {1, 0, 1, 1, 1},
+                                                                      {1, 1, 0, 1, 0},
+                                                                      {0, 1, 1, 0, 1},
+                                                                      {1, 1, 0, 1, 0}});
+        // when
+        final Matrix adjacencyMatrix = graph.calculateAdjacencyMatrix();
+
+        // then
+        assertThat(adjacencyMatrix).isEqualTo(expectedAdjacencyMatrix);
     }
 
     @Test
@@ -97,7 +118,7 @@ public class GraphTest {
 
     private Object getObjectForUnequal() {
         final Edges edges1 = new Edges();
-        final Edges edges2 = new Edges(new Edge(1,2));
+        final Edges edges2 = new Edges(new Edge(1, 2));
         return new Object[][]{{new Graph(edges1), null},
                               {new Graph(edges1), new Graph(edges2)}};
     }

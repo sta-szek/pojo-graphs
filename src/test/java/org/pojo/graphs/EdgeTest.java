@@ -6,9 +6,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @RunWith(JUnitParamsRunner.class)
 public class EdgeTest {
+
+    @Test
+    public void shouldThrowException_WhenFirstEdgeIsLessThanOne(){
+        // given
+
+        // when
+        Throwable result = catchThrowable(() -> new Edge(0, 1));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidEdgeDeclaration.class);
+    }
+
+    @Test
+    public void shouldThrowException_WhenSecongEdgeIsLessThanOne(){
+        // given
+
+        // when
+        Throwable result = catchThrowable(() -> new Edge(1, 0));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidEdgeDeclaration.class);
+    }
 
     @Test
     public void shouldCreateUndirectedEdge() {
@@ -22,14 +45,14 @@ public class EdgeTest {
     }
 
     @Test
-    public void shouldReturnSameHashCodes(){
+    public void shouldReturnSameHashCodes() {
         // given
-        Edge edge1 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
-        Edge edge2 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+        final Edge edge1 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+        final Edge edge2 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
 
         // when
-        int result1 = edge1.hashCode();
-        int result2 = edge2.hashCode();
+        final int result1 = edge1.hashCode();
+        final int result2 = edge2.hashCode();
 
         // then
         assertThat(result1).isEqualTo(result2);
@@ -42,6 +65,18 @@ public class EdgeTest {
 
         // when
         final String result = edge.toString();
+
+        // then
+        assertThat(result).isEqualTo(expectedString);
+    }
+
+    @Test
+    @Parameters(method = "getObjectsForUndirectedTest")
+    public void shouldReturnTrue_IfEdgeIsUndirected_FalseOtherwise(final Edge edge, final boolean expectedString) {
+        // given
+
+        // when
+        final boolean result = edge.isUndirected();
 
         // then
         assertThat(result).isEqualTo(expectedString);
@@ -69,6 +104,12 @@ public class EdgeTest {
 
         // then
         assertThat(result).isFalse();
+    }
+
+    private Object getObjectsForUndirectedTest() {
+        return new Object[][]{{new Edge(1, 2, EdgeType.LEFT_DIRECTED), false},
+                              {new Edge(1, 2, EdgeType.UNDIRECTED), true},
+                              {new Edge(1, 2, EdgeType.RIGHT_DIRECTED), false}};
     }
 
     private Object getObjectsToTest() {

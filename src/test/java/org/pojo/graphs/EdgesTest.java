@@ -37,6 +37,18 @@ public class EdgesTest {
     }
 
     @Test
+    @Parameters(method = "getObjectForNumberOfEdges")
+    public void shouldReturnNumberOfEdges(final Edges edges, final int expectedEdges) {
+        // given
+
+        // when
+        final int result = edges.getNumberOfEdges();
+
+        // then
+        assertThat(result).isEqualTo(expectedEdges);
+    }
+
+    @Test
     @Parameters(method = "getObjectForEqual")
     public void shouldEqual(final Edges edges1, final Edges edges2) {
         // given
@@ -58,6 +70,20 @@ public class EdgesTest {
 
         // then
         assertThat(result).isFalse();
+    }
+
+    private Object getObjectForNumberOfEdges() {
+        final Edge edge1 = new Edge(1, 2);
+        final Edge edge2 = new Edge(2, 3);
+        final Edge edge3 = new Edge(2, 1);
+        final Edge edge4 = new Edge(1, 4);
+        final Edge edge5 = new Edge(1, 5);
+        return new Object[][]{{new Edges(), 0},
+                              {new Edges(edge1), 2},
+                              {new Edges(edge1, edge2), 3},
+                              {new Edges(edge1, edge2, edge3), 3},
+                              {new Edges(edge1, edge2, edge3, edge4), 4},
+                              {new Edges(edge5), 5}};
     }
 
     private Object getObjectForEqual() {
