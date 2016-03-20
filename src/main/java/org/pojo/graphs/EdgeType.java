@@ -23,7 +23,7 @@ public enum EdgeType {
     }
 
     public boolean isUndirected() {
-        return this.equals(UNDIRECTED);
+        return UNDIRECTED == this;
     }
 
     @Override
