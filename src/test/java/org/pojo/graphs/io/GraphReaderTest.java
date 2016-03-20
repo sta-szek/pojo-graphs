@@ -55,7 +55,7 @@ public class GraphReaderTest {
     public void shouldThrowException_IfFileIsEmpty() throws URISyntaxException, IOException {
         // given
         final URI uri = this.getClass()
-                            .getResource("/emptyFile.txt")
+                            .getResource("/EmptyFile.txt")
                             .toURI();
         final Path path = new File(uri).toPath();
         final GraphReader graphReader = new GraphReader();
