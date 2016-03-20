@@ -6,9 +6,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 @RunWith(JUnitParamsRunner.class)
 public class EdgeTest {
+
+    @Test
+    public void shouldThrowException_WhenFirstEdgeIsLessThanOne(){
+        // given
+
+        // when
+        Throwable result = catchThrowable(() -> new Edge(0, 1));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidEdgeDeclaration.class);
+    }
+
+    @Test
+    public void shouldThrowException_WhenSecongEdgeIsLessThanOne(){
+        // given
+
+        // when
+        Throwable result = catchThrowable(() -> new Edge(1, 0));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidEdgeDeclaration.class);
+    }
 
     @Test
     public void shouldCreateUndirectedEdge() {
@@ -49,7 +72,7 @@ public class EdgeTest {
 
     @Test
     @Parameters(method = "getObjectsForUndirectedTest")
-    public void shouldReturnTrueIfEdgeIsUndirectedFalseOtherwise(final Edge edge, final boolean expectedString) {
+    public void shouldReturnTrue_IfEdgeIsUndirected_FalseOtherwise(final Edge edge, final boolean expectedString) {
         // given
 
         // when

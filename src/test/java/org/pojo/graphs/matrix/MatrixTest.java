@@ -211,6 +211,19 @@ public class MatrixTest {
     }
 
     @Test
+    public void shouldThrowException_WhenMatricesSizesAreDifferent() {
+        // given
+        final Matrix matrix1 = createAndFillWith(1, 3, 2);
+        final Matrix matrix2 = createAndFillWith(2, 2, 3);
+
+        // when
+        final Throwable result = catchThrowable(() -> matrix1.sub(matrix2));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidOperationException.class);
+    }
+
+    @Test
     @Parameters(method = "getMatricesForMultiplications")
     public void shouldMultiplyByOtherMatrix(final int[][] matrixArray1, final int[][] matrixArray2, final int[][] expectedMatrixArray) {
         // given
