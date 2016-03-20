@@ -5,32 +5,37 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Edge {
-    private final long from;
-    private final long to;
+    private final int from;
+    private final int to;
     private final EdgeType edgeType;
 
-    public Edge(final long from, final long to) {
-        this.from = from;
-        this.to = to;
-        this.edgeType = EdgeType.UNDIRECTED;
+    public Edge(final int from, final int to) {
+        this(from, to, EdgeType.UNDIRECTED);
     }
 
-    public Edge(final long from, final long to, final EdgeType edgeType) {
+    public Edge(final int from, final int to, final EdgeType edgeType) {
+        if (from < 1 || to < 1) {
+            throw new InvalidEdgeDeclaration("Wierzchołki muszą być większe od 0!");
+        }
         this.from = from;
         this.to = to;
         this.edgeType = edgeType;
     }
 
-    public long getFrom() {
+    public int getFrom() {
         return from;
     }
 
-    public long getTo() {
+    public int getTo() {
         return to;
     }
 
     public EdgeType getEdgeType() {
         return edgeType;
+    }
+
+    public boolean isUndirected() {
+        return EdgeType.UNDIRECTED == edgeType;
     }
 
     @Override

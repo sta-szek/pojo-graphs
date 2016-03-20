@@ -8,32 +8,32 @@ public class Matrix {
     private final int rows;
     private final int columns;
 
-    private final long[][] matrix;
+    private final int[][] matrix;
 
     public Matrix(final int squareSize) {
         this(squareSize, squareSize);
     }
 
     public Matrix(final int rows, final int columns) {
-        matrix = new long[rows][columns];
+        matrix = new int[rows][columns];
         this.rows = rows;
         this.columns = columns;
     }
 
-    public Matrix(final long[][] matrix) {
+    public Matrix(final int[][] matrix) {
         this.matrix = matrix;
         this.rows = matrix.length;
         this.columns = matrix[0].length;
     }
 
-    public void setValue(final long value, final int row, final int column) {
+    public void setValue(final int value, final int row, final int column) {
         if (isOutOfRange(row, column)) {
             throw new UnsupportedOperationException("Nie można ustawić wartości dla pola spoza zakresu macierzy!");
         }
         matrix[row][column] = value;
     }
 
-    public long getValue(final int row, final int column) {
+    public int getValue(final int row, final int column) {
         if (isOutOfRange(row, column)) {
             throw new UnsupportedOperationException("Nie można odczytać wartości dla pola spoza zakresu macierzy!");
         }
@@ -45,7 +45,7 @@ public class Matrix {
         final Matrix sumOfMatrix = new Matrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                final long newValue = getValue(i, j) + matrix.getValue(i, j);
+                final int newValue = getValue(i, j) + matrix.getValue(i, j);
                 sumOfMatrix.setValue(newValue, i, j);
             }
         }
@@ -57,18 +57,18 @@ public class Matrix {
         final Matrix sumOfMatrix = new Matrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                final long newValue = getValue(i, j) - matrix.getValue(i, j);
+                final int newValue = getValue(i, j) - matrix.getValue(i, j);
                 sumOfMatrix.setValue(newValue, i, j);
             }
         }
         return sumOfMatrix;
     }
 
-    public Matrix multiply(final long multiplyNumber) {
+    public Matrix multiply(final int multiplyNumber) {
         final Matrix multipliedMatrix = new Matrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                final long newValue = getValue(i, j) * multiplyNumber;
+                final int newValue = getValue(i, j) * multiplyNumber;
                 multipliedMatrix.setValue(newValue, i, j);
             }
         }
@@ -80,7 +80,7 @@ public class Matrix {
         final Matrix multipliedMatrix = new Matrix(rows, otherMatrix.columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < otherMatrix.columns; j++) {
-                long temp = 0;
+                int temp = 0;
                 for (int w = 0; w < otherMatrix.rows; w++) {
                     temp += getValue(i, w) * otherMatrix.getValue(w, j);
                 }

@@ -46,7 +46,7 @@ public class MatrixTest {
         final Matrix matrix = new Matrix(1, 1);
 
         // when
-        final Throwable result = catchThrowable(() -> matrix.setValue(1L, row, column));
+        final Throwable result = catchThrowable(() -> matrix.setValue(1, row, column));
 
         // then
         assertThat(result).isInstanceOf(UnsupportedOperationException.class);
@@ -68,7 +68,7 @@ public class MatrixTest {
     @Test
     public void shouldCreateMatrixFormTwoDimensionalArray() {
         // given
-        final long[][] matrix = {{5, 1}, {4, 2}};
+        final int[][] matrix = {{5, 1}, {4, 2}};
         final Matrix expectedResult = new Matrix(2, 2);
         expectedResult.setValue(5, 0, 0);
         expectedResult.setValue(1, 0, 1);
@@ -130,11 +130,11 @@ public class MatrixTest {
     public void shouldSetValue() {
         // given
         final Matrix matrix = new Matrix(2, 2);
-        final long expectedResult = 1L;
+        final int expectedResult = 1;
 
         // when
         matrix.setValue(expectedResult, 1, 1);
-        final long result = getInternalStateOfMatrix(matrix, 1, 1);
+        final int result = getInternalStateOfMatrix(matrix, 1, 1);
 
         // then
         assertThat(result).isEqualTo(expectedResult);
@@ -144,11 +144,11 @@ public class MatrixTest {
     public void shouldGetValue() throws Exception {
         // given
         final Matrix matrix = new Matrix(2, 2);
-        final long expectedResult = 1L;
+        final int expectedResult = 1;
         setInternalStateOfMatrix(matrix, expectedResult, 1, 1);
 
         // when
-        final long result = matrix.getValue(1, 1);
+        final int result = matrix.getValue(1, 1);
 
         // then
         assertThat(result).isEqualTo(expectedResult);
@@ -172,7 +172,7 @@ public class MatrixTest {
     public void shouldMultiplyByNumber() {
         // given
         final Matrix matrix = createAndFillWith(2, 2, 3);
-        final long multiplyNumber = 4L;
+        final int multiplyNumber = 4;
         final Matrix expectedMatrix = createAndFillWith(2 * multiplyNumber, 2, 3);
 
         // when
@@ -212,7 +212,7 @@ public class MatrixTest {
 
     @Test
     @Parameters(method = "getMatricesForMultiplications")
-    public void shouldMultiplyByOtherMatrix(final long[][] matrixArray1, final long[][] matrixArray2, final long[][] expectedMatrixArray) {
+    public void shouldMultiplyByOtherMatrix(final int[][] matrixArray1, final int[][] matrixArray2, final int[][] expectedMatrixArray) {
         // given
         final Matrix matrix1 = new Matrix(matrixArray1);
         final Matrix matrix2 = new Matrix(matrixArray2);
@@ -277,7 +277,7 @@ public class MatrixTest {
                               {Matrices.MATRIX_2A, Matrices.MATRIX_2B, Matrices.MATRIX_2A_X_MATRIX_2B}};
     }
 
-    private Matrix createAndFillWith(final long value, final int n, final int m) {
+    private Matrix createAndFillWith(final int value, final int n, final int m) {
         final Matrix matrix = new Matrix(n, m);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -287,13 +287,13 @@ public class MatrixTest {
         return matrix;
     }
 
-    private long getInternalStateOfMatrix(final Matrix matrix, final int n, final int m) {
-        final long[][] targetMatrix = getInternalState(matrix, "matrix");
+    private int getInternalStateOfMatrix(final Matrix matrix, final int n, final int m) {
+        final int[][] targetMatrix = getInternalState(matrix, "matrix");
         return targetMatrix[n][m];
     }
 
-    private void setInternalStateOfMatrix(final Matrix matrix, final long value, final int n, final int m) throws Exception {
-        final long[][] targetMatrix = getInternalState(matrix, "matrix");
+    private void setInternalStateOfMatrix(final Matrix matrix, final int value, final int n, final int m) throws Exception {
+        final int[][] targetMatrix = getInternalState(matrix, "matrix");
         targetMatrix[n][m] = value;
         TestHelper.setFinalStatic(matrix, "matrix", targetMatrix);
     }

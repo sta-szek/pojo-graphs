@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Edges {
 
@@ -74,18 +76,51 @@ public class Edges {
                                     .toHashCode();
     }
 
+    public int getNumberOfEdges() {
+        final List<Integer> listOfEdges = edges.stream()
+                                               .map(this::toEdgePair)
+                                               .map(Arrays::stream)
+                                               .flatMap(IntStream::boxed)
+                                               .distinct()
+                                               .collect(Collectors.toList());
+
+        final Optional<Integer> min = listOfEdges.stream()
+                                                 .min(Integer::compare);
+
+        final Optional<Integer> max = listOfEdges.stream()
+                                                 .max(Integer::compare);
+
+        if (min.isPresent() && max.isPresent()) {
+            for (int i = min.get(); i < max.get(); i++) {
+                if (!listOfEdges.contains(i)) {
+                    listOfEdges.add(i);
+                }
+            }
+        }
+        listOfEdges.sort(Long::compare);
+        return listOfEdges.size();
+    }
+
+    public Stream<Edge> stream() {
+        return edges.stream();
+    }
+
+    private int[] toEdgePair(final Edge edge) {
+        return new int[]{edge.getFrom(), edge.getTo()};
+    }
+
     private void removeAndAddNewUndirected(final Edge edge) {
         edges.remove(edge);
         sortAndAdd(new Edge(edge.getFrom(), edge.getTo(), EdgeType.UNDIRECTED));
     }
 
     private void sortAndAdd(final Edge edge) {
-        final long from = edge.getFrom() <= edge.getTo()
-                          ? edge.getFrom()
-                          : edge.getTo();
-        final long to = edge.getFrom() > edge.getTo()
-                        ? edge.getFrom()
-                        : edge.getTo();
+        final int from = edge.getFrom() <= edge.getTo()
+                         ? edge.getFrom()
+                         : edge.getTo();
+        final int to = edge.getFrom() > edge.getTo()
+                       ? edge.getFrom()
+                       : edge.getTo();
         EdgeType edgeType = edge.getEdgeType();
         if (from != edge.getFrom()) {
             if (edge.getEdgeType()

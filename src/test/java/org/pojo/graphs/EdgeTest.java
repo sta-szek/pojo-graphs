@@ -22,14 +22,14 @@ public class EdgeTest {
     }
 
     @Test
-    public void shouldReturnSameHashCodes(){
+    public void shouldReturnSameHashCodes() {
         // given
-        Edge edge1 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
-        Edge edge2 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+        final Edge edge1 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
+        final Edge edge2 = new Edge(1, 2, EdgeType.LEFT_DIRECTED);
 
         // when
-        int result1 = edge1.hashCode();
-        int result2 = edge2.hashCode();
+        final int result1 = edge1.hashCode();
+        final int result2 = edge2.hashCode();
 
         // then
         assertThat(result1).isEqualTo(result2);
@@ -42,6 +42,18 @@ public class EdgeTest {
 
         // when
         final String result = edge.toString();
+
+        // then
+        assertThat(result).isEqualTo(expectedString);
+    }
+
+    @Test
+    @Parameters(method = "getObjectsForUndirectedTest")
+    public void shouldReturnTrueIfEdgeIsUndirectedFalseOtherwise(final Edge edge, final boolean expectedString) {
+        // given
+
+        // when
+        final boolean result = edge.isUndirected();
 
         // then
         assertThat(result).isEqualTo(expectedString);
@@ -69,6 +81,12 @@ public class EdgeTest {
 
         // then
         assertThat(result).isFalse();
+    }
+
+    private Object getObjectsForUndirectedTest() {
+        return new Object[][]{{new Edge(1, 2, EdgeType.LEFT_DIRECTED), false},
+                              {new Edge(1, 2, EdgeType.UNDIRECTED), true},
+                              {new Edge(1, 2, EdgeType.RIGHT_DIRECTED), false}};
     }
 
     private Object getObjectsToTest() {
