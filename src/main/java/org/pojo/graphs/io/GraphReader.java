@@ -4,7 +4,6 @@ package org.pojo.graphs.io;
 import org.pojo.graphs.Edge;
 import org.pojo.graphs.EdgeType;
 import org.pojo.graphs.Graph;
-import org.pojo.graphs.InvalidGraphFileException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,6 +25,9 @@ public class GraphReader {
         final List<Edge> edges = Files.lines(path)
                                       .map(this::toEdge)
                                       .collect(Collectors.toList());
+        if (edges.isEmpty()) {
+            throw new InvalidGraphFileException("Plik jest pusty!");
+        }
         return new Graph(edges);
     }
 

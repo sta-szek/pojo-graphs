@@ -1,4 +1,4 @@
-package org.pojo.graphs;
+package org.pojo.graphs.io;
 
 
 public class InvalidGraphFileException extends RuntimeException {

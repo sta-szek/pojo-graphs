@@ -2,7 +2,6 @@ package org.pojo.graphs.io;
 
 import org.junit.Test;
 import org.pojo.graphs.Graph;
-import org.pojo.graphs.InvalidGraphFileException;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +40,22 @@ public class GraphReaderTest {
         // given
         final URI uri = this.getClass()
                             .getResource("/graphs/WrongDeclaration.txt")
+                            .toURI();
+        final Path path = new File(uri).toPath();
+        final GraphReader graphReader = new GraphReader();
+
+        // when
+        final Throwable result = catchThrowable(() -> graphReader.read(path));
+
+        // then
+        assertThat(result).isInstanceOf(InvalidGraphFileException.class);
+    }
+
+    @Test
+    public void shouldThrowException_IfFileIsEmpty() throws URISyntaxException, IOException {
+        // given
+        final URI uri = this.getClass()
+                            .getResource("/EmptyFile.txt")
                             .toURI();
         final Path path = new File(uri).toPath();
         final GraphReader graphReader = new GraphReader();
