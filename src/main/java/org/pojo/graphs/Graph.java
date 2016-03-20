@@ -5,21 +5,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.pojo.graphs.matrix.Matrix;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class Graph {
-
-    private static final String FROM = "FROM";
-    private static final String TO = "TO";
-    private static final String DIRECTION = "DIRECTION";
-    private static final String REGEX = "(?<" + FROM + ">\\d)(?<" + DIRECTION + ">(<\\-)|(\\->)|(<\\->)|( ))(?<" + TO + ">\\d)";
-    private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     private final Edges edges;
 
@@ -28,13 +16,6 @@ public class Graph {
     }
 
     public Graph(final List<Edge> edges) {
-        this.edges = new Edges(edges);
-    }
-
-    public Graph(final Path path) throws IOException {
-        final List<Edge> edges = Files.lines(path)
-                                      .map(this::toEdge)
-                                      .collect(Collectors.toList());
         this.edges = new Edges(edges);
     }
 
@@ -86,16 +67,4 @@ public class Graph {
         return adjacencyMatrix;
     }
 
-    private Edge toEdge(final String line) {
-        final Matcher matcher = PATTERN.matcher(line);
-        if (matcher.matches()) {
-            final int from = Integer.parseInt(matcher.group(FROM));
-            final EdgeType edgeType = EdgeType.getByDirection(matcher.group(DIRECTION));
-            final int to = Integer.parseInt(matcher.group(TO));
-            return new Edge(from, to, edgeType);
-
-        } else {
-            throw new InvalidGraphFileException("Plik zawiera nieprawidłowe wpisy");
-        }
-    }
 }
